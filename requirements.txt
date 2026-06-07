@@ -1,0 +1,10 @@
+runpod
+cloudinary
+requests
+diffusers @ git+https://github.com/huggingface/diffusers
+transformers>=4.44
+accelerate
+safetensors
+sentencepiece
+imageio
+imageio-ffmpeg
