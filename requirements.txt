@@ -1,10 +1,13 @@
 runpod
 cloudinary
 requests
-diffusers @ git+https://github.com/huggingface/diffusers
-transformers>=4.44
-accelerate
+# Закреплённые совместимые версии (git HEAD diffusers ломал импорт T5EncoderModel)
+diffusers==0.33.1
+transformers==4.48.3
+accelerate==1.2.1
+huggingface_hub==0.27.1
 safetensors
 sentencepiece
+protobuf
 imageio
 imageio-ffmpeg
