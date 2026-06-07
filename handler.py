@@ -110,10 +110,14 @@ def handler(job):
         "worst quality, inconsistent motion, jittery, flicker, distorted, warped, blurry, deformed")
     width = _round32(inp.get("width", 480))
     height = _round32(inp.get("height", 832))
-    num_frames = _round_frames(inp.get("num_frames", 97))
+    num_frames = _round_frames(inp.get("num_frames", 65))   # ~2.7с: длиннее = латент «уплывает»
     steps = int(inp.get("steps", 40))
     fps = int(inp.get("fps", 24))
     seed = int(inp.get("seed", 0))
+    guidance = float(inp.get("guidance", 3.0))
+    # LTX-стабилизация VAE-декода (без них конец клипа выжигается в шум)
+    decode_timestep = float(inp.get("decode_timestep", 0.03))
+    decode_noise_scale = float(inp.get("decode_noise_scale", 0.025))
 
     t0 = time.time()
     try:
@@ -124,7 +128,9 @@ def handler(job):
         frames = pipe(
             image=image, prompt=prompt, negative_prompt=neg,
             width=width, height=height, num_frames=num_frames,
-            num_inference_steps=steps, generator=gen,
+            num_inference_steps=steps, guidance_scale=guidance,
+            decode_timestep=decode_timestep, decode_noise_scale=decode_noise_scale,
+            generator=gen,
         ).frames[0]
         work = tempfile.mkdtemp(prefix="t2_")
         out = os.path.join(work, "clip.mp4")
